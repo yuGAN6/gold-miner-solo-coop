@@ -1,0 +1,27 @@
+# Original game files and locally generated/decompiled data
+/resources/
+/mod-work/
+/mod-release/
+/mod-tools/vendor/
+*.asar
+*.swf
+*.pack
+*.wasm
+*.jar
+*.dll
+*.exe
+*.log
+
+# Local Python state and credentials
+__pycache__/
+*.py[cod]
+.env
+.env.*
+*.pem
+*.key
+
+# OS/editor state
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/

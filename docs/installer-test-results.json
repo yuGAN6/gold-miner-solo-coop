@@ -1,0 +1,15 @@
+{
+  "passed": 9,
+  "checks": [
+    "Fresh install reconstructs exact target, preserves exact original backup",
+    "Repeated installation is idempotent",
+    "Uninstall and repeated uninstall restore exact original",
+    "Wrong versions and other mods are refused without modification",
+    "Damaged payload is refused and original is unchanged",
+    "Failed final validation removes staged output and preserves original",
+    "Empty CMD directory argument and automatic current-folder discovery work",
+    "Missing backup prevents uninstall without altering the installed mod",
+    "User installed game remains unchanged throughout tests"
+  ],
+  "packageSha256": "0fd98cb2e9a012bcc3c1ecf5b208bd0a32cca3cc037d85ca8db963c81ffcb300"
+}
