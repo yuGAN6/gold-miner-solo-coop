@@ -11,18 +11,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--game-dir', required=True, type=pathlib.Path)
     args = parser.parse_args()
-    expected = '751653bc50d01951a450a3cc24a1a7b7682e96033a38218c5adc9cb5f2225727'
     candidates = [args.game_dir / 'resources' / name for name in
                   ('app.asar.goldminer-coop-original', 'app.asar.pre-coop-mod', 'app.asar')]
-    original = next((p for p in candidates if p.is_file() and sha(p) == expected), None)
+    original = next((p for p in candidates if p.is_file()), None)
     if original is None:
-        raise SystemExit('No matching original archive was found. Required Steam build: 26673644.')
+        raise SystemExit('No original ASAR or local backup was found.')
     local = ROOT / 'resources/app.asar.pre-coop-mod'
     local.parent.mkdir(exist_ok=True)
     if not local.exists():
         shutil.copy2(original, local)
-    if sha(local) != expected:
-        raise SystemExit('Local build input differs; it was not overwritten.')
+    if sha(local) != sha(original):
+        raise SystemExit('A different local build input already exists; it was not overwritten. Use a clean build workspace.')
     extract(local, ROOT / 'mod-work/original-app')
     subprocess.run(['node', str(ROOT / 'mod-tools/extract-swf.cjs')], cwd=ROOT, check=True)
     # Import after prerequisites and build inputs have been checked.

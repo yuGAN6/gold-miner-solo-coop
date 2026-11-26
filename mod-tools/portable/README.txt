@@ -1,45 +1,36 @@
-Gold Miner Single-Player Campaign Co-op Mod v0.1.0
+Gold Miner Single-Player Campaign Co-op v0.1.1
 
-Play the original single-player levels with two local players. Each player has
-an independent miner and claw; money, objectives, inventory and time are shared.
+Extract the whole ZIP, close the game, and run Install.cmd.
+Select a folder containing rf.swf, app.asar or resources\app.asar.
+You can also drag that folder onto Install.cmd.
+Start the game normally and select Single Player.
 
-REQUIREMENTS
-  Windows Steam edition, App ID 3777060, game version 2.0.0, build 26673644.
-  The original resources/app.asar must match this SHA-256:
-  751653bc50d01951a450a3cc24a1a7b7682e96033a38218c5adc9cb5f2225727
-  Windows PowerShell 5.1 and .NET are built-in Windows components.
-  No Python, Java, Node.js or Flash decompiler is required for installation.
+P1: arrow keys. P2: S to drop, W for dynamite, A/D for original Left/Right.
+Money, goals, inventory and countdown are shared. Swing/retraction rules are unchanged.
 
-INSTALL
-  1. Extract the entire release ZIP. Do not run it inside the ZIP viewer.
-  2. Close Gold Miner.
-  3. Double-click Install.cmd. Select the folder containing GoldMiner.exe if asked.
-     You can also drag that folder onto Install.cmd.
-  4. Launch the game normally from Steam and select Single Player.
-  Unsupported builds or existing modifications are rejected before replacement.
-  The installer creates and verifies a complete original-archive backup.
+No Steam App ID, build, game version, original-SWF hash or whole-ASAR hash whitelist.
+Uses Windows PowerShell 5.1 and .NET; no Python, Java, Node.js or FFDec installation.
+Resource structure must still be compatible. Mod payload/write integrity checks remain.
 
-CONTROLS
-  Left player: original arrow keys.
-  Right player: S = drop claw, W = dynamite; A/D = original Left/Right actions.
-  In classic gameplay A uses a freeze box when available, and D usually does nothing.
-  Modes with manual retraction retain their original Left/Right mechanics.
-  Miners keep the original automatic swing; WASD does not freely move the miner.
+Loose Flash mode backs up and replaces existing rf.swf variants. Other modifications
+inside the same SWF are replaced, not merged. Uninstall.cmd restores pre-install copies;
+keep .goldminer-coop-backups and .goldminer-solo-coop-state.json.
 
-UNINSTALL
-  Close the game, run Uninstall.cmd and select the same game folder.
-  Keep resources/app.asar.goldminer-coop-original: it is the verified original backup.
-  If Steam has updated the game, the uninstaller refuses to overwrite the newer build.
-  Steam Verify integrity of game files can restore the current official version.
+Packaged mode changes only the named launcher/pack-reader entries of the CURRENT ASAR.
+Four Flash files are loaded from resources/goldminer-solo-coop. swf.pack is untouched.
+Unrelated archive entries and launcher changes are preserved. A full pre-install ASAR
+snapshot is retained as app.asar.goldminer-coop-*.bak. Uninstall removes the marked
+overlay hooks from the current archive and retains snapshots/assets for reuse.
 
-NOTES
-  This unofficial delta patch requires an existing compatible game installation.
-  Steam updates or file verification can remove the mod. A new build needs a new patch.
-  Other mods that change app.asar are not automatically merged.
-  Save, achievement and leaderboard logic remains the original game's integration.
-  Local play and isolated installer checks passed; a complete campaign playthrough,
-  every late-game item/obstacle combination and a second physical PC are not validated.
-  CMD uses ExecutionPolicy Bypass only for its child process; it does not change the
-  machine's persistent execution policy. The installer does not auto-elevate.
+If upgrading from v0.1.0, uninstall that old version first to start from official files.
+Otherwise the old mod remains part of the pre-existing installation after v0.1.1 removal.
+Game updates may remove hooks; reinstall when the resource interface remains compatible.
 
-Chinese instructions: see 使用说明.txt in this folder.
+The Flash gameplay was tested in the actual game. The new installer was tested on
+modified archive copies and loose Flash files, including runtime pack-reader checks.
+A second physical PC, full campaign and new full desktop session are not validated.
+Original save, achievement and leaderboard logic remains; no separate mod records.
+This is an unofficial mod and requires an existing compatible game or Flash resources.
+
+CMD's ExecutionPolicy Bypass applies only to its child process, not persistent settings.
+The installer does not auto-elevate. Chinese instructions: 使用说明.txt.

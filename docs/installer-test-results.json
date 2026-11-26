@@ -1,15 +1,15 @@
 {
   "passed": 9,
   "checks": [
-    "Fresh install reconstructs exact target, preserves exact original backup",
-    "Repeated installation is idempotent",
-    "Uninstall and repeated uninstall restore exact original",
-    "Wrong versions and other mods are refused without modification",
-    "Damaged payload is refused and original is unchanged",
-    "Failed final validation removes staged output and preserves original",
-    "Empty CMD directory argument and automatic current-folder discovery work",
-    "Missing backup prevents uninstall without altering the installed mod",
-    "User installed game remains unchanged throughout tests"
+    "All packed ASAR entries compared: only the two intended launcher/reader entries change",
+    "Accept modified archives without Steam metadata/EXE or whole-archive hash checks; preserve other entries and snapshot input",
+    "Repeated installation keeps a single hash wrapper and loader",
+    "Runtime pack reader returns all four co-op SWFs, correct hashes, and the unchanged two-player SWF",
+    "Original game checkSwfIntegrity function passes with the updated hash expression and overlay; integrity checking remains active",
+    "Uninstall removes only overlay hooks, preserving modifications made before and after installation",
+    "Standalone rf.swf installation, repeated installation, and original-file restoration work without an Electron/Steam installation",
+    "Keep release-file integrity checks: damaged Flash payload is rejected without changing the game",
+    "Invalid archive structure fails before replacement, without a Steam/version whitelist"
   ],
-  "packageSha256": "0fd98cb2e9a012bcc3c1ecf5b208bd0a32cca3cc037d85ca8db963c81ffcb300"
+  "packageSha256": "e1176bfb6b17d16e6eb2c8d262e187be537a1bd3850e1f224a385edaf3b62d23"
 }

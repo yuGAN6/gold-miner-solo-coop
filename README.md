@@ -1,6 +1,6 @@
 # Gold Miner Single-Player Campaign Co-op
 
-Play the original **Gold Miner: Classic Edition** single-player levels with two local players. This unofficial mod adds a second independently controlled miner to the existing single-player campaign.
+Play the original **Gold Miner: Classic Edition** single-player levels with two local players. This unofficial Flash mod adds a second independently controlled miner to the existing single-player campaign.
 
 [Download the latest release](https://github.com/yuGAN6/gold-miner-solo-coop/releases/latest) · [中文说明](README.zh-CN.md) · [Development guide](docs/DEVELOPMENT.md)
 
@@ -12,36 +12,32 @@ Play the original **Gold Miner: Classic Edition** single-player levels with two 
 - Arrow keys for the left player; WASD for the right player.
 - Shared money, objectives, inventory and countdown.
 - Existing single-player level layouts and progression.
-- A portable installer with exact-build checks, original-file backup and uninstall support.
+- Install to loose Flash files or add a named-resource overlay to an Electron ASAR.
 
 The original separate two-player mode is unchanged. This mod is for playing the **single-player levels together**.
 
 ## Requirements
 
-| Item | Supported version |
+| Item | Requirement |
 | --- | --- |
-| Platform | Windows Steam edition |
-| Steam App ID | `3777060` |
-| Game version | `2.0.0` |
-| Steam build | `26673644` |
-| Installer runtime | Windows PowerShell 5.1 and .NET, included with Windows |
+| Installer platform | Windows, with built-in Windows PowerShell 5.1 and .NET |
+| Loose Flash installation | A folder containing `rf.swf`; localized variants are replaced when present |
+| Packaged installation | `app.asar` or `resources/app.asar` with the expected launcher and SWF pack reader |
+| Steam identification | No App ID, build number or displayed-version check |
+| Original file hashes | No whole-archive or original-SWF hash whitelist |
 
-Compatibility is checked against the original `resources/app.asar` SHA-256, not just the displayed version number:
+Python, Java, Node.js and FFDec are **not needed to install a release**. The packaged overlay runs inside the game's existing Electron runtime.
 
-```text
-751653bc50d01951a450a3cc24a1a7b7682e96033a38218c5adc9cb5f2225727
-```
-
-The installer refuses a different build or another modified archive. Python, Java, Node.js and FFDec are **not needed to install a release**.
+The installer checks resource structure and mod-file integrity. Removing version restrictions does not make unrelated Flash games or incompatible launcher structures compatible. Existing changes inside an `rf.swf` that is replaced are not merged into the supplied co-op SWF.
 
 ## Install
 
-1. Download `GoldMiner-Solo-Coop-v0.1.0.zip` from [Releases](https://github.com/yuGAN6/gold-miner-solo-coop/releases).
+1. Download `GoldMiner-Solo-Coop-v0.1.1.zip` from [Releases](https://github.com/yuGAN6/gold-miner-solo-coop/releases).
 2. Extract the entire ZIP and close the game.
-3. Double-click `Install.cmd`. It looks for the Steam installation and asks for the folder containing `GoldMiner.exe` if needed. You can also drag that game folder onto `Install.cmd`.
-4. Launch the game normally from Steam and select **Single Player**.
+3. Double-click `Install.cmd`. Select the folder containing `rf.swf`, `app.asar` or `resources/app.asar`. You can also drag that folder onto `Install.cmd`; a package placed in/under the game directory can discover it automatically.
+4. Start your game normally and select **Single Player**. Steam installations can still launch through Steam.
 
-Download the release ZIP rather than GitHub's automatically generated **Source code** ZIP: the source archive does not contain the patch payload.
+Download the release ZIP rather than GitHub's automatically generated **Source code** ZIP: the source archive does not contain the Flash payload. Mod-file hashes and written-resource checks remain enabled to detect corrupt downloads or writes.
 
 ## Controls
 
@@ -56,29 +52,34 @@ Miners retain the original automatic swing. In classic gameplay, A uses a freeze
 
 ## Uninstall and updates
 
-Close the game and run `Uninstall.cmd` against the same installation. Keep `resources/app.asar.goldminer-coop-original`; it is the verified original backup.
+Close the game and run `Uninstall.cmd` against the same folder.
 
-Steam updates or **Verify integrity of game files** may remove the mod. Reinstall only when the original archive still matches the supported build. The installer and uninstaller will not overwrite an unknown updated/modded archive with this older version. Use Steam's file verification to restore the current official build when needed.
+For packaged installs, uninstall removes this mod's launcher/hash overlay hooks from the **current** ASAR, retaining unrelated changes made before or after installation. The original `swf.pack` is never rewritten. A full pre-install ASAR snapshot is retained beside the archive as `app.asar.goldminer-coop-*.bak`; overlay assets and install state remain in `goldminer-solo-coop/` for reuse.
+
+For loose Flash installs, uninstall restores the pre-install SWF copies. Keep `.goldminer-coop-backups/` and `.goldminer-solo-coop-state.json`. Restoration replaces the targeted SWFs, including any later edits to those same files.
+
+Game updates can remove overlay hooks or replace Flash files. You can reinstall without a Steam-build or full-file hash gate, provided the resource structure is still supported. When migrating from v0.1.0, uninstall that old version first if you want the new version's uninstall to return to the official files rather than retain the old mod.
 
 ## How the patch works
 
-The release contains a copy/literal delta for `app.asar`. The installer copies unchanged bytes from the recipient's original installation and inserts the changed data, verifies the complete result, backs up the original and atomically replaces the archive.
+The release ships four ready-built co-op `rf.swf` variants and a structure-aware installer. It no longer uses a fixed-offset whole-ASAR binary delta.
 
-The mod duplicates the miner, claw, button and collection-animation symbols in each of the four single-player SWF variants. Player 2 has independent instances and WASD button events. Collision checks prevent claiming an already collected object; countdown settlement checks both collection animations. The four modified `rf.swf` hashes and the ASAR integrity metadata are updated.
+In loose mode, existing target SWFs are backed up and replaced. In packaged mode, the installer rebuilds the **current** ASAR by named entries, adds a marked overlay to `main/swf-pack.js`, and wraps the current `SWF_SHA_BAKED` expression with the four replacement hashes. Unrelated entries and launcher edits are preserved. The game's own Flash integrity check remains active with the updated hashes; ASAR metadata is recalculated for changed entries.
 
-Unchanged launcher code, including embedded key material, is reused from the original installation rather than included as literal launcher code in the release delta. The package is not a standalone copy of the game.
+The Flash mod duplicates miner, claw, button and collection-animation symbols. Player 2 has independent instances and WASD events. Collision and countdown settlement checks account for both players. Original embedded keys remain in the recipient's game and are not included in the release.
 
 ## Validation and limitations
 
-- The author has play-tested the mod in the actual game, including independent control and shared scoring.
-- The installer was tested on isolated archive copies for clean install, repeated install, uninstall, mismatched versions, damaged payloads, failed output validation, folder discovery and missing backups.
-- The generated game archive matches the tested modded archive byte for byte.
-- A full campaign playthrough, every special item/late-game obstacle combination and a second physical computer have not been validated.
+- The Flash gameplay has been play-tested in the actual game, including independent control and shared scoring.
+- The v0.1.1 installer is tested on modified ASAR fixtures without Steam files or an EXE, and on standalone/customized `rf.swf` files.
+- Tests cover repeat installation, snapshot backups, preservation of unrelated changes, uninstall, damaged payload rejection and malformed-archive handling.
+- The actual game pack reader was tested with the overlay: all four modded Flash resources and their hashes match, while the original two-player SWF remains unchanged.
+- A full campaign playthrough, every special item/late-game obstacle combination and a second physical computer have not been validated; the new overlay installer has been validated through isolated/runtime tests, not a new full desktop gameplay session.
 - Original save, achievement and leaderboard integration remains in place; there is no separate mod record system.
-- Other mods that change `app.asar` are not automatically merged.
+- Loose SWF replacements do not merge other Flash modifications. Packaged installation preserves unrelated archive entries but requires the named launcher/pack-reader interface.
 
 This is an unofficial project, not affiliated with or endorsed by the original game's developers or publisher. Original game code and assets remain the property of their respective owners.
 
 ## Development
 
-See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for preparing build inputs from a compatible game installation, building the SWFs and exporting/testing the installer. Decompiled game files, full archives and third-party tool binaries are excluded from this repository.
+See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for preparing local inputs, building SWFs and exporting/testing the installer. Decompiled game files, full archives and third-party tool binaries are excluded from this repository.
